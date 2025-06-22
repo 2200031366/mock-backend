@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
+const path = require("path");
 
 
 const app = express();
@@ -19,13 +20,13 @@ mongoose
 const adminRouter = require("./routes/adminRoutes");
 const learnerRouter = require("./routes/learnerRoutes");
 const trainerRouter = require("./routes/trainerRoutes");
-const saathiRouter = require("./routes/saathiRoutes");
+
 
 // Register Routes
 app.use("/admin", adminRouter);
 app.use("/learner", learnerRouter);
 app.use("/trainer", trainerRouter);
-app.use("/saathi", saathiRouter);
+app.use("/admin/coursematerial", express.static(path.join(__dirname, "media")));
 
 // Start Server
 const PORT = process.env.PORT || 2003;

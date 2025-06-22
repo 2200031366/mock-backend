@@ -21,7 +21,8 @@ adminRouter.put("/changeadminpwd", adminController.changeAdminPwd);
 // Trainers
 adminRouter.post("/addtrainer", adminController.addTrainer);
 adminRouter.get("/viewtrainers", adminController.viewTrainers);
-adminRouter.delete("/deletetrainer/:username", adminController.deleteTrainer);
+adminRouter.delete("/deletetrainer/:email", adminController.deleteTrainer); // updated from username to email
+adminRouter.get("/viewtrainerprofile/:email", adminController.viewTrainerProfile); // fixed route
 
 // Dashboard Analysis
 adminRouter.get("/analysis", adminController.analysis);

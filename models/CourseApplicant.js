@@ -1,41 +1,16 @@
-const mongoose = require('mongoose');
-const moment = require('moment-timezone');
+const mongoose = require("mongoose");
 
-const courseApplicantSchema = new mongoose.Schema({
-  applicantId: {
+const CourseApplicantSchema = new mongoose.Schema({
+  jobseekeremail: String,  // Learner's email
+  courseid: String,
+  coursename: String,
+  trainername: String,
+  duration: String,
+  status: {
     type: String,
-    unique: true,
-    required: true,
-    default: () => generateRandomId()
-  },
-  // Value from Course model
-  courseId: {
-    type: Number,
-    required: true
-  },
-  // Value from Learner model
-  learnerEmail: {
-    type: String,
-    required: true
-  },
-  courseStatus: {
-    type: String,
-    required: true,
-    default: "ENROLLED"
-  },
-  enrolledTime: {
-    type: String,
-    default: () => moment().tz('Asia/Kolkata').format('DD-MM-YYYY HH:mm:ss A')
+    enum: ["Pending", "Approved", "Rejected"],
+    default: "Pending"
   }
 });
 
-const CourseApplicant = mongoose.model('CourseApplicant', courseApplicantSchema);
-
-function generateRandomId() {
-  const min = 100000;
-  const max = 999999;
-  const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-  return "C" + randomNumber;
-}
-
-module.exports = CourseApplicant;
+module.exports = mongoose.model("CourseApplicant", CourseApplicantSchema);

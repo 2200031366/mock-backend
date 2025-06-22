@@ -1,9 +1,14 @@
 const mongoose = require("mongoose");
 
 const trainerSchema = new mongoose.Schema({
-  fullname: {           // or username if you want
+  fullname: {
     type: String,
     required: true
+  },
+  username: {
+    type: String,
+    required: true,
+    unique: true
   },
   email: {
     type: String,
@@ -14,13 +19,13 @@ const trainerSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  contact: {            // phone number
+  contact: {
     type: String,
     required: true,
     unique: true
   }
 });
 
-const Trainer = mongoose.model('Trainer', trainerSchema);
+const Trainer = mongoose.model("Trainer", trainerSchema);
 
 module.exports = Trainer;

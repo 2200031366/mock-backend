@@ -30,7 +30,7 @@ const addcourse = async (req, res) => {
 const viewcourses = async (req, res) => {
   try {
     const username = req.params.username;
-    const courses = await Course.find({ "trainer.username": username }); // assuming 'trainer' field
+    const courses = await Course.find({ "trainer.username": username });
     if (courses.length === 0) {
       res.status(200).send("DATA NOT FOUND");
     } else {
@@ -51,7 +51,7 @@ const viewcourseapplicants = async (req, res) => {
       return res.status(200).send("No courses found for this trainer");
     }
 
-    const courseIds = courses.map(course => course.courseid); // assuming each course has a courseid field
+    const courseIds = courses.map(course => course.courseid);
     const applicants = await CourseApplicant.find({ courseid: { $in: courseIds } });
 
     if (applicants.length === 0) {

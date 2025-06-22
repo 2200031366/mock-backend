@@ -93,31 +93,81 @@ const enrolledcourses = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
+// Update Learner Profile
+const updateLearner = async (req, res) => {
+  try {
+    const email = req.params.email;
+    const updated = await Learner.findOneAndUpdate({ email }, req.body, { new: true });
+    if (!updated) return res.status(404).send("Learner not found");
+    res.send("Learner profile updated successfully");
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+};
+// Enroll in a course (request access)
+
+
+
 
 // Enroll in a Course
+// Enroll in a Course (Learner requests, Trainer approves)
 const enrollcourse = async (req, res) => {
   try {
-    const input = req.body; // courseId and learner email
-    const alreadyEnrolled = await CourseApplicant.findOne(input);
+    const { learneremail, courseid, coursename, trainername, duration } = req.body;
 
-    if (!alreadyEnrolled) {
-      const applicant = new CourseApplicant(input);
-      await applicant.save();
-      res.status(200).send("Course Enrolled Successfully");
-    } else {
-      res.status(200).send("You have already enrolled in this Course");
+    // Check if already enrolled (or already requested)
+    const alreadyEnrolled = await CourseApplicant.findOne({ learneremail, courseid });
+
+    if (alreadyEnrolled) {
+      return res.status(200).send("You have already applied for this course.");
     }
+
+    const applicant = new CourseApplicant({
+      learneremail,
+      courseid,
+      coursename,
+      trainername,
+      duration,
+      status: "Pending"
+    });
+
+    await applicant.save();
+    res.status(200).send("Enrollment request sent. Awaiting trainer approval.");
   } catch (e) {
     res.status(500).send(e.message);
   }
 };
+// Update role after approval (Alumni/Trainer)
+const selectRole = async (req, res) => {
+  const { applicantId, selectedRole } = req.body;
+  try {
+    const updated = await CourseApplicant.findByIdAndUpdate(
+      applicantId,
+      { role: selectedRole },
+      { new: true }
+    );
+
+    if (!updated) {
+      return res.status(404).send("Enrollment not found");
+    }
+
+    res.send("Role updated successfully");
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+
+
 
 module.exports = {
   insertlearner,
   checklearnerlogin,
   updatelearnerprofile,
+  selectRole,
   learnerprofile,
   viewcourses,
+  updateLearner,
   enrollcourse,
   enrolledcourses,
 };
